@@ -1,6 +1,13 @@
 <div class="container">
   <div class="row">
+    
     <div class="col-xs-12 col-md-6 col-md-offset-3">
+      <div *ngIf="error" class="alert alert-danger">
+        <h4>An Error Occured</h4>
+        <h6>{{error}}</h6>
+        <br>
+        <button class="btn btn-danger" (click)="handleError()">Okay</button>
+      </div>
       <form #postForm="ngForm" (ngSubmit)="onCreatePost(postForm.value)">
         <div class="form-group">
           <label for="title">Title</label>
@@ -28,10 +35,10 @@
       </button>
     </div>
   </div>
-  <div *ngIf="isLoading" class="loader">Loading...</div>
+  <div *ngIf="isLoading && !error" class="loader">Loading...</div>
   <div class="row">
     <div class="col-xs-12 col-md-6 col-md-offset-3">
-      <p *ngIf="!loadedPosts && !isLoading">No posts available!</p>
+      <p  *ngIf="!isLoading && loadedPosts.length < 1">No posts available!</p> 
       <ul class="list-group" *ngFor="let post of loadedPosts">
         <li class="list-group-item">
           <h4>{{post.title}}</h4>

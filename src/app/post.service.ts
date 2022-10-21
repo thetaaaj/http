@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Post } from './post.model';
 
-import { map } from 'rxjs/operators';
+import { map,catchError } from 'rxjs/operators';
+import { Subject, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,15 +12,25 @@ export class PostService {
 
   private URL: string = 'https://ng-learn-http-5689d-default-rtdb.firebaseio.com/posts.json';
 
+  error = new Subject<string>();
   constructor(private http: HttpClient) { }
 
   createandStorePost(post: Post) {
     console.log(post)
-    return this.http.post(this.URL, post);
+    this.http.post(this.URL, post).subscribe(data=>{
+      console.log(data);
+    },(error)=>{
+      this.error.next(error.message);
+    });
   }
 
   fetchPosts() {
-    return this.http.get(this.URL)
+    return this.http.get(this.URL,
+      {
+        headers: new HttpHeaders({'Custom-Header':'Hello'}),
+        params : new HttpParams().set('print','pretty')
+      }
+      )
       .pipe(map((responseData) => {
         const postArray = [];
         for (const key in responseData) {
@@ -28,7 +39,11 @@ export class PostService {
           }
         }
         return postArray;
-      }));
+      }),
+      catchError((errorRes)=>{
+        return throwError(errorRes)
+      })
+      );
   }
 
 deletePost(){
