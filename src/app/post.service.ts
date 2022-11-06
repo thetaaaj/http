@@ -17,11 +17,7 @@ export class PostService {
 
   createandStorePost(post: Post) {
     console.log(post)
-    this.http.post(this.URL, post).subscribe(data=>{
-      console.log(data);
-    },(error)=>{
-      this.error.next(error.message);
-    });
+    return this.http.post(this.URL, post);
   }
 
   fetchPosts() {
@@ -41,7 +37,7 @@ export class PostService {
         return postArray;
       }),
       catchError((errorRes)=>{
-        return throwError(errorRes)
+        return throwError(errorRes);
       })
       );
   }
