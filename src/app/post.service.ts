@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Post } from './post.model';
 
-import { map,catchError } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 import { Subject, throwError } from 'rxjs';
 
 @Injectable({
@@ -23,10 +23,10 @@ export class PostService {
   fetchPosts() {
     return this.http.get(this.URL,
       {
-        headers: new HttpHeaders({'Custom-Header':'Hello'}),
-        params : new HttpParams().set('print','pretty')
+        headers: new HttpHeaders({ 'Custom-Header': 'Hello' }),
+        params: new HttpParams().set('print', 'pretty')
       }
-      )
+    )
       .pipe(map((responseData) => {
         const postArray = [];
         for (const key in responseData) {
@@ -36,14 +36,14 @@ export class PostService {
         }
         return postArray;
       }),
-      catchError((errorRes)=>{
-        return throwError(errorRes);
-      })
+        catchError((errorRes) => {
+          return throwError(errorRes);
+        })
       );
   }
 
-deletePost(){
-  return this.http.delete(this.URL);
-}
+  deletePost() {
+    return this.http.delete(this.URL);
+  }
 
 }
